@@ -1,33 +1,28 @@
 package scala_style.either;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
-import static scala_style.ExceptionUtils.expect;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.expectThrows;
 import static scala_style.util.Either.ERROR_LEFT_OF_NULL;
 import static scala_style.util.Left.Left;
 
-public class LeftTest {
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+class LeftTest {
 
     @Test
-    public void isLeft() {
+    void isLeft() {
         assert Left(5).isLeft();
     }
 
     @Test
-    public void isNotRight() {
+    void isNotRight() {
         assert !Left(5).isRight();
     }
 
     @Test
-    public void leftOfNullThrowsIllegalArgumentException() {
-        expect(exception, IllegalArgumentException.class, ERROR_LEFT_OF_NULL);
-
-        Left(null);
+    void leftOfNullThrowsIllegalArgumentException() {
+        IllegalArgumentException exception = expectThrows(IllegalArgumentException.class, () -> Left(null));
+        assertEquals(exception.getMessage(), ERROR_LEFT_OF_NULL);
     }
 
 }

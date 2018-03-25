@@ -1,8 +1,6 @@
 package scala_style.try_;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 import scala_style.Option;
 import scala_style.Some;
 import scala_style.util.Either;
@@ -14,86 +12,81 @@ import static scala_style.Option.ERROR_NOT_SUPERTYPE;
 import static scala_style.util.Success.Success;
 import static scala_style.util.Try.*;
 
-public class SuccessTest {
+class SuccessTest {
 
     private static final Try<Integer> try5 = Try(() -> 5);
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     @Test
-    public void isNotFailure() {
+    void isNotFailure() {
         assert !Success(5).isFailure();
     }
 
     @Test
-    public void isSuccess() {
+    void isSuccess() {
         assert Success(5).isSuccess();
     }
 
     @Test
-    public void getReturnsValue() {
+    void getReturnsValue() {
         assert Success(5).get().equals(5);
     }
 
     @Test
-    public void failedReturnsFailure() {
-        expect(exception, RuntimeException.class, ERROR_FAILURE_DOT_GET,
+    void failedReturnsFailure() {
+        expect(() -> Success(5).failed().get(),
+                RuntimeException.class, ERROR_FAILURE_DOT_GET,
                 UnsupportedOperationException.class, ERROR_SUCCESS_DOT_FAILED);
-
-        Success(5).failed().get();
     }
 
     @Test
-    public void getOrElseReturnsValue() {
+    void getOrElseReturnsValue() {
         assert try5.getOrElse(Number.class, () -> 7).equals(5);
     }
 
     @Test
-    public void getOrElseWithUnrelatedTypesThrowsIllegalArgumentException() {
-        expect(exception, IllegalArgumentException.class, ERROR_NOT_SUPERTYPE);
-
-        try5.getOrElse(String.class, () -> "");
+    void getOrElseWithUnrelatedTypesThrowsIllegalArgumentException() {
+        expect(() -> try5.getOrElse(String.class, () -> ""),
+                IllegalArgumentException.class, ERROR_NOT_SUPERTYPE);
     }
 
     @Test
-    public void orElseReturnsValue() {
+    void orElseReturnsValue() {
         assert try5.orElse(Number.class, () -> Try(() -> 7)).get().equals(5);
     }
 
     @Test
-    public void orElseWithUnrelatedTypesThrowsIllegalArgumentException() {
-        expect(exception, IllegalArgumentException.class, ERROR_NOT_SUPERTYPE);
-
-        try5.orElse(String.class, () -> Try(() -> ""));
+    void orElseWithUnrelatedTypesThrowsIllegalArgumentException() {
+        expect(() -> try5.orElse(String.class, () -> Try(() -> "")),
+                IllegalArgumentException.class, ERROR_NOT_SUPERTYPE);
     }
 
     @Test
-    public void mapAppliesF() {
+    void mapAppliesF() {
         assert try5.map(i -> String.valueOf(i * 2)).get().equals("10");
     }
 
     @Test
-    public void flatMapAppliesF() {
+    void flatMapAppliesF() {
         assert try5.flatMap(i -> Try(() -> String.valueOf(i * 2))).get().equals("10");
     }
 
     @Test
-    public void foldAppliesFB() {
+    void foldAppliesFB() {
         assert try5.fold(e -> 7, i -> "").equals("");
     }
 
     @Test
-    public void recoverWithReturnsValue() {
+    void recoverWithReturnsValue() {
         assert try5.recoverWith(Number.class, i -> Try(() -> 7)).get().equals(5);
     }
 
     @Test
-    public void recoverReturnsValue() {
+    void recoverReturnsValue() {
         assert try5.recover(Number.class, i -> 7).get().equals(5);
     }
 
     @Test
-    public void toOptionReturnsSome() {
+    void toOptionReturnsSome() {
         Option<Integer> option = try5.toOption();
 
         assert option instanceof Some<?>;
@@ -101,7 +94,7 @@ public class SuccessTest {
     }
 
     @Test
-    public void toEitherReturnsRight() {
+    void toEitherReturnsRight() {
         Either<Throwable, Integer> either = try5.toEither();
 
         assert either instanceof Right<?, ?>;

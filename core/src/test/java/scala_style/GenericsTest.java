@@ -1,8 +1,12 @@
-package scala_style.util;
+package scala_style;
+
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 import static scala_style.util.Generics.isSuperType;
-import org.junit.jupiter.api.Test;
 
+@RunWith(JUnitPlatform.class)
 class GenericsTest {
 
     @Test

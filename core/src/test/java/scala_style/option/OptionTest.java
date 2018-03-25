@@ -1,8 +1,6 @@
 package scala_style.option;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 import scala_style.None;
 import scala_style.Option;
 import scala_style.Some;
@@ -14,13 +12,10 @@ import java.util.function.Supplier;
 import static scala_style.ExceptionUtils.expect;
 import static scala_style.Option.*;
 
-public class OptionTest {
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+class OptionTest {
 
     @Test
-    public void noneEqualsNone() {
+    void noneEqualsNone() {
         Option<Integer> noInteger = empty();
         Option<String> noString = empty();
         //noinspection EqualsBetweenInconvertibleTypes
@@ -28,7 +23,7 @@ public class OptionTest {
     }
 
     @Test
-    public void optionsWithEqualValuesAreEqual() {
+    void optionsWithEqualValuesAreEqual() {
         Number number = 5;
         Integer integer = 5;
 
@@ -41,7 +36,7 @@ public class OptionTest {
     }
 
     @Test
-    public void optionsWithNonEqualValuesAreNotEqual() {
+    void optionsWithNonEqualValuesAreNotEqual() {
         Option<Integer> option5 = Option(5);
         Option<Integer> option7 = Option(7);
 
@@ -49,7 +44,7 @@ public class OptionTest {
     }
 
     @Test
-    public void optionsOfUnrelatedTypesAreNotEqual() {
+    void optionsOfUnrelatedTypesAreNotEqual() {
         Option<Integer> integerOption = Option(5);
         Option<String> stringOption = Option("");
 
@@ -58,7 +53,7 @@ public class OptionTest {
     }
 
     @Test
-    public void someAndNoneOfSameTypeAreNotEqual() {
+    void someAndNoneOfSameTypeAreNotEqual() {
         Option<Integer> integerOption = Option(5);
         Option<Integer> noIntegerOption = empty();
 
@@ -66,61 +61,61 @@ public class OptionTest {
     }
 
     @Test
-    public void optionOfNullIsNone() {
+    void optionOfNullIsNone() {
         Option<Integer> option = Option(null);
         assert option instanceof None<?>;
     }
 
     @Test
-    public void optionOfValueIsSome() {
+    void optionOfValueIsSome() {
         Option<Integer> option = Option(5);
         assert option instanceof Some<?>;
     }
 
     @Test
-    public void emptyReturnsNone() {
+    void emptyReturnsNone() {
         assert empty() instanceof None<?>;
     }
 
     @Test
-    public void whenReturnsNoneOnFalse() {
+    void whenReturnsNoneOnFalse() {
         assert when(false, () -> 5) instanceof None<?>;
     }
 
     @Test
-    public void whenReturnsSomeOnTrue() {
+    void whenReturnsSomeOnTrue() {
         assert when(true, () -> 5) instanceof Some<?>;
     }
 
     @Test
-    public void unlessReturnsNoneOnTrue() {
+    void unlessReturnsNoneOnTrue() {
         assert unless(true, () -> 5) instanceof None<?>;
     }
 
     @Test
-    public void unlessReturnsSomeOnFalse() {
+    void unlessReturnsSomeOnFalse() {
         assert unless(false, () -> 5) instanceof Some<?>;
     }
 
     @Test
-    public void getOrElseThrowsIllegalArgumentExceptionWhenNotSuperType() {
-        expect(exception, IllegalArgumentException.class, ERROR_NOT_SUPERTYPE);
-
-        Option(5).getOrElse(String.class, () -> "");
+    void getOrElseThrowsIllegalArgumentExceptionWhenNotSuperType() {
+        expect(() -> Option(5).getOrElse(String.class, () -> ""),
+                IllegalArgumentException.class,
+                ERROR_NOT_SUPERTYPE);
     }
 
     @Test
-    public void getOrElseThrowsIllegalArgumentExceptionWhenNotSupertype() {
+    void getOrElseThrowsIllegalArgumentExceptionWhenNotSupertype() {
         Option<Integer> option = Option(5);
         Supplier<String> default_ = () -> "";
 
-        expect(exception, IllegalArgumentException.class, ERROR_NOT_SUPERTYPE);
-
-        option.getOrElse(String.class, default_);
+        expect(() -> option.getOrElse(String.class, default_),
+                IllegalArgumentException.class,
+                ERROR_NOT_SUPERTYPE);
     }
 
     @Test
-    public void getOrElseReturnsCastedValueWhenSome() {
+    void getOrElseReturnsCastedValueWhenSome() {
         int value = 5;
         Option<Integer> option = Option(value);
         Number orElse = option.getOrElse(Number.class, () -> 7);
@@ -130,7 +125,7 @@ public class OptionTest {
     }
 
     @Test
-    public void getOrElseReturnsDefaultWhenNone() {
+    void getOrElseReturnsDefaultWhenNone() {
         Option<Integer> option = empty();
         Supplier<Integer> default_ = () -> 5;
         Integer orElse = option.getOrElse(Integer.class, default_);
@@ -138,27 +133,27 @@ public class OptionTest {
     }
 
     @Test
-    public void orNullReturnsValueWhenSome() {
+    void orNullReturnsValueWhenSome() {
         assert Objects.equals(Option(5).orNull(), 5);
     }
 
     @Test
-    public void orNullReturnsNullWhenNone() {
+    void orNullReturnsNullWhenNone() {
         assert empty().orNull() == null;
     }
 
     @Test
-    public void orElseThrowsIllegalArgumentExceptionWhenNotSupertype() {
+    void orElseThrowsIllegalArgumentExceptionWhenNotSupertype() {
         Option<Integer> option = Option(5);
         Supplier<Option<String>> default_ = () -> Option("");
 
-        expect(exception, IllegalArgumentException.class, ERROR_NOT_SUPERTYPE);
-
-        option.orElse(String.class, default_);
+        expect(() -> option.orElse(String.class, default_),
+                IllegalArgumentException.class,
+                ERROR_NOT_SUPERTYPE);
     }
 
     @Test
-    public void orElseReturnsIdenticalOptionWhenSome() {
+    void orElseReturnsIdenticalOptionWhenSome() {
         Option<Integer> option = Option(5);
         Supplier<Option<Integer>> default_ = () -> Option(7);
         Option<Integer> newOption = option.orElse(Integer.class, default_);
@@ -167,7 +162,7 @@ public class OptionTest {
     }
 
     @Test
-    public void orElseReturnsDefaultWhenNone() {
+    void orElseReturnsDefaultWhenNone() {
         Option<Integer> none = empty();
         Supplier<Option<Integer>> default_ = () -> Option(7);
 
@@ -175,12 +170,12 @@ public class OptionTest {
     }
 
     @Test
-    public void mapReturnsNoneWhenEmpty() {
+    void mapReturnsNoneWhenEmpty() {
         assert empty().map(o -> 5).isEmpty();
     }
 
     @Test
-    public void mapReturnsCorrectValueWhenNotEmpty() {
+    void mapReturnsCorrectValueWhenNotEmpty() {
         Function<Integer, Integer> f = i -> i * 2;
         int value = 5;
         int expected = f.apply(value);
@@ -189,12 +184,12 @@ public class OptionTest {
     }
 
     @Test
-    public void foldReturnsIfEmptyIfEmpty() {
+    void foldReturnsIfEmptyIfEmpty() {
         assert empty().fold(() -> 5, o -> o).equals(5);
     }
 
     @Test
-    public void foldAppliesFunctionIfNotEmpty() {
+    void foldAppliesFunctionIfNotEmpty() {
         Function<Integer, Integer> f = i -> i * 2;
         int value = 5;
         int expected = f.apply(value);
@@ -203,12 +198,12 @@ public class OptionTest {
     }
 
     @Test
-    public void flatMapReturnsNoneWhenEmpty() {
+    void flatMapReturnsNoneWhenEmpty() {
         assert Option.<Integer>empty().flatMap(Option::Option).isEmpty();
     }
 
     @Test
-    public void flatMapAppliesFunctionWhenNotEmpty() {
+    void flatMapAppliesFunctionWhenNotEmpty() {
         Option<Integer> five = Option(5);
         assert five.flatMap(Option::Option).equals(five);
     }

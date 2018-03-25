@@ -1,44 +1,43 @@
 package scala_style.either;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 import java.util.NoSuchElementException;
 
-import static scala_style.ExceptionUtils.expect;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.expectThrows;
 import static scala_style.util.Either.ERROR_LEFT_DOT_RIGHT;
 import static scala_style.util.Either.ERROR_RIGHT_DOT_LEFT;
 import static scala_style.util.Left.Left;
 import static scala_style.util.Right.Right;
 
-public class EitherTest {
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+@RunWith(JUnitPlatform.class)
+class EitherTest {
 
     @Test
-    public void leftDotLeftReturnsValue() {
+    @DisplayName("Left.left returns value")
+    void leftDotLeftReturnsValue() {
         assert Left(5).left().equals(5);
     }
 
     @Test
-    public void leftDotRightThrowsNoSuchElementException() {
-        expect(exception, NoSuchElementException.class, ERROR_LEFT_DOT_RIGHT);
-
-        Left(5).right();
+    void leftDotRightThrowsNoSuchElementException() {
+        NoSuchElementException exception = expectThrows(NoSuchElementException.class, () -> Left(5).right());
+        assertEquals(exception.getMessage(), ERROR_LEFT_DOT_RIGHT);
     }
 
     @Test
-    public void rightDotRighttReturnsValue() {
+    void rightDotRighttReturnsValue() {
         assert Right(5).right().equals(5);
     }
 
     @Test
-    public void rightDotLeftThrowsNoSuchElementException() {
-        expect(exception, NoSuchElementException.class, ERROR_RIGHT_DOT_LEFT);
-
-        Right(5).left();
+    void rightDotLeftThrowsNoSuchElementException() {
+        NoSuchElementException exception = expectThrows(NoSuchElementException.class, () -> Right(5).left());
+        assertEquals(exception.getMessage(), ERROR_RIGHT_DOT_LEFT);
     }
 
 }

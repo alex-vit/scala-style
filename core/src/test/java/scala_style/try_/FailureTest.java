@@ -1,8 +1,6 @@
 package scala_style.try_;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 import scala_style.None;
 import scala_style.util.Failure;
 import scala_style.util.Left;
@@ -15,34 +13,32 @@ import static scala_style.ExceptionUtils.expect;
 import static scala_style.util.Try.ERROR_FAILURE_DOT_GET;
 import static scala_style.util.Try.Try;
 
-public class FailureTest {
+class FailureTest {
 
     private static final String npeMessage = "NPE";
     private static final Try<Integer> tryWithNpe = Try((Supplier<Integer>) () -> {
         throw new NullPointerException(npeMessage);
     });
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     @Test
-    public void isFailure() {
+    void isFailure() {
         assert tryWithNpe.isFailure();
     }
 
     @Test
-    public void isNotSuccess() {
+    void isNotSuccess() {
         assert !tryWithNpe.isSuccess();
     }
 
     @Test
-    public void getThrowsException() {
-        expect(exception, RuntimeException.class, ERROR_FAILURE_DOT_GET, NullPointerException.class);
-
-        tryWithNpe.get();
+    void getThrowsException() {
+        expect(tryWithNpe::get,
+                RuntimeException.class, ERROR_FAILURE_DOT_GET,
+                NullPointerException.class);
     }
 
     @Test
-    public void failedReturnsSuccessOfException() {
+    void failedReturnsSuccessOfException() {
         Try<Throwable> failed = tryWithNpe.failed();
 
         assert failed instanceof Success<?>;
@@ -50,32 +46,32 @@ public class FailureTest {
     }
 
     @Test
-    public void getOrElseReturnsDefault() {
+    void getOrElseReturnsDefault() {
         assert tryWithNpe.getOrElse(String.class, () -> "").equals("");
     }
 
     @Test
-    public void orElseReturnsDefault() {
+    void orElseReturnsDefault() {
         assert tryWithNpe.orElse(String.class, () -> Try(() -> "")).get().equals("");
     }
 
     @Test
-    public void mapReturnsFailure() {
+    void mapReturnsFailure() {
         assert tryWithNpe.map(i -> 5f) instanceof Failure<?>;
     }
 
     @Test
-    public void flatMapReturnsFailure() {
+    void flatMapReturnsFailure() {
         assert tryWithNpe.flatMap(i -> Try(() -> 5f)) instanceof Failure<?>;
     }
 
     @Test
-    public void foldAppliesFA() {
+    void foldAppliesFA() {
         assert tryWithNpe.fold(e -> 7, i -> "").equals(7);
     }
 
     @Test
-    public void successfulRecoverWithReturnsSuccess() {
+    void successfulRecoverWithReturnsSuccess() {
         Try<String> successfulRecoverWith = tryWithNpe.recoverWith(String.class, e -> Try(e::getMessage));
 
         assert successfulRecoverWith instanceof Success<?>;
@@ -83,7 +79,7 @@ public class FailureTest {
     }
 
     @Test
-    public void failedRecoverWithReturnsFailure() {
+    void failedRecoverWithReturnsFailure() {
         Try<String> failedRecoverWith = tryWithNpe.recoverWith(String.class, e -> Try(() -> {
             throw new IllegalArgumentException();
         }));
@@ -93,7 +89,7 @@ public class FailureTest {
     }
 
     @Test
-    public void successfulRecoverReturnsSuccess() {
+    void successfulRecoverReturnsSuccess() {
         Try<Integer> successfulRecover = tryWithNpe.recover(Integer.class, e -> 5);
 
         assert successfulRecover instanceof Success<?>;
@@ -101,7 +97,7 @@ public class FailureTest {
     }
 
     @Test
-    public void failedRecoverReturnsFailure() {
+    void failedRecoverReturnsFailure() {
         Try<String> failedRecover = tryWithNpe.recover(String.class, e -> {
             throw new IllegalArgumentException();
         });
@@ -111,12 +107,12 @@ public class FailureTest {
     }
 
     @Test
-    public void toOptionReturnsNone() {
+    void toOptionReturnsNone() {
         assert tryWithNpe.toOption() instanceof None<?>;
     }
 
     @Test
-    public void toEitherReturnsLeft() {
+    void toEitherReturnsLeft() {
         assert tryWithNpe.toEither() instanceof Left<?, ?>;
     }
 

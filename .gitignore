@@ -1,9 +1,6 @@
-# User-specific stuff:
 .idea/
+.gradle/
 *.iml
-
-## File-based project format:
-*.iws
-
-# IntelliJ
+build/
 out/
+gradle/wrapper/*.jar
