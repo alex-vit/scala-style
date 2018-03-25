@@ -1,18 +1,17 @@
 package scala_style.util;
 
-import org.junit.Test;
-
 import static scala_style.util.Generics.isSuperType;
+import org.junit.jupiter.api.Test;
 
-public class GenericsTest {
+class GenericsTest {
 
     @Test
-    public void numberAndIntegerShouldReturnTrue() {
+    void numberAndIntegerShouldReturnTrue() {
         assert isSuperType(Number.class, Integer.class);
     }
 
     @Test
-    public void stringAndIntegerShouldReturnFalse() {
+    void stringAndIntegerShouldReturnFalse() {
         assert !isSuperType(String.class, Integer.class);
     }
 
