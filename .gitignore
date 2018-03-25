@@ -3,4 +3,4 @@
 *.iml
 build/
 out/
-gradle/wrapper/*.jar
+gradle/
