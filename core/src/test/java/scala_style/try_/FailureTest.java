@@ -10,8 +10,8 @@ import scala_style.util.Try;
 import java.util.function.Supplier;
 
 import static scala_style.ExceptionUtils.expect;
-import static scala_style.util.Try.ERROR_FAILURE_DOT_GET;
-import static scala_style.util.Try.Try;
+import static scala_style.util.Failure.Failure;
+import static scala_style.util.Try.*;
 
 class FailureTest {
 
@@ -19,6 +19,12 @@ class FailureTest {
     private static final Try<Integer> tryWithNpe = Try((Supplier<Integer>) () -> {
         throw new NullPointerException(npeMessage);
     });
+
+    @Test
+    void failureOfNullThrowsException() {
+        expect(() -> Failure(null),
+                IllegalArgumentException.class, ERROR_FAILURE_OF_NULL);
+    }
 
     @Test
     void isFailure() {

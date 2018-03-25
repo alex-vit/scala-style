@@ -17,6 +17,12 @@ class SuccessTest {
     private static final Try<Integer> try5 = Try(() -> 5);
 
     @Test
+    void successOfNullThrowsException() {
+        expect(() -> Success(null),
+                IllegalArgumentException.class, ERROR_SUCCESS_OF_NULL);
+    }
+
+    @Test
     void isNotFailure() {
         assert !Success(5).isFailure();
     }
