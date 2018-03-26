@@ -5,6 +5,7 @@ import scala_style.util.Either;
 import scala_style.util.Left;
 import scala_style.util.Right;
 
+import java.util.Iterator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -12,7 +13,7 @@ import static scala_style.None.None;
 import static scala_style.Some.Some;
 import static scala_style.util.Generics.isSuperType;
 
-public abstract class Option<A> {
+public abstract class Option<A> implements Iterable<A> {
 
     public static final String ERROR_NONE_GET = "None.get";
     public static final String ERROR_SOME_OF_NULL = "Some(null)";
@@ -40,6 +41,11 @@ public abstract class Option<A> {
 
     @Override
     public abstract int hashCode();
+
+    @Override
+    public Iterator<A> iterator() {
+        return new OptionIterator<>(this);
+    }
 
     public abstract boolean isEmpty();
 
@@ -84,6 +90,25 @@ public abstract class Option<A> {
 
     public final <X> Either<X, A> toRight(Supplier<X> left) {
         return (isEmpty()) ? Left.Left(left.get()) : Right.Right(get());
+    }
+
+    private static final class OptionIterator<A> implements Iterator<A> {
+
+        private final Option<A> option;
+
+        private OptionIterator(Option<A> option) {
+            this.option = option;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return option.isDefined();
+        }
+
+        @Override
+        public A next() {
+            return option.get();
+        }
     }
 
 }
