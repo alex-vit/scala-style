@@ -14,10 +14,6 @@ public class Some<T> extends Option<T> {
         return new Some<>(value);
     }
 
-    public static void main(String[] args) {
-        Some(null);
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj != null && Some.class.isAssignableFrom(obj.getClass())) {

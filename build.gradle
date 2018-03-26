@@ -30,7 +30,3 @@ ext {
     ext.junitPlatformVersion = '1.0.0-M2'
     ext.junitJupiterVersion  = '5.0.0-M2'
 }
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.6'
-}
