@@ -5,10 +5,13 @@ import scala_style.None;
 import scala_style.Option;
 import scala_style.Some;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static scala_style.ExceptionUtils.expect;
 import static scala_style.Option.*;
 
@@ -206,6 +209,25 @@ class OptionTest {
     void flatMapAppliesFunctionWhenNotEmpty() {
         Option<Integer> five = Option(5);
         assert five.flatMap(Option::Option).equals(five);
+    }
+
+    @Test
+    void noneIteratorIsEmpty() {
+        Iterator<Object> iterator = Option(null).iterator();
+        assertFalse(iterator.hasNext());
+        expect(iterator::next, NoSuchElementException.class, ERROR_EMPTY_ITERATOR_GET);
+    }
+
+    @Test
+    void someIteratorHasOneItem() {
+        Iterator<Integer> iterator = Option(5).iterator();
+
+        assertTrue(iterator.hasNext());
+        int next = iterator.next();
+        assertEquals(next, 5);
+
+        assertFalse(iterator.hasNext());
+        expect(iterator::next, NoSuchElementException.class, ERROR_EMPTY_ITERATOR_GET);
     }
 
 }

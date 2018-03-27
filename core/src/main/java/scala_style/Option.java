@@ -6,6 +6,7 @@ import scala_style.util.Left;
 import scala_style.util.Right;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -18,6 +19,7 @@ public abstract class Option<A> implements Iterable<A> {
     public static final String ERROR_NONE_GET = "None.get";
     public static final String ERROR_SOME_OF_NULL = "Some(null)";
     public static final String ERROR_NOT_SUPERTYPE = "B must be a supertype";
+    public static final String ERROR_EMPTY_ITERATOR_GET = "Option.iterator.next on empty iterator";
 
     @SuppressWarnings({"MethodNameSameAsClassName", "WeakerAccess"})
     public static <A> Option<A> Option(@Nullable A value) {
@@ -95,6 +97,7 @@ public abstract class Option<A> implements Iterable<A> {
     private static final class OptionIterator<A> implements Iterator<A> {
 
         private final Option<A> option;
+        private boolean iterated = false;
 
         private OptionIterator(Option<A> option) {
             this.option = option;
@@ -102,12 +105,17 @@ public abstract class Option<A> implements Iterable<A> {
 
         @Override
         public boolean hasNext() {
-            return option.isDefined();
+            return option.isDefined() && !iterated;
         }
 
         @Override
         public A next() {
-            return option.get();
+            if (option.isEmpty() || iterated) {
+                throw new NoSuchElementException(ERROR_EMPTY_ITERATOR_GET);
+            } else {
+                iterated = true;
+                return option.get();
+            }
         }
     }
 
