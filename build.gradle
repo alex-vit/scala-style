@@ -30,3 +30,7 @@ ext {
     ext.junitPlatformVersion = '1.0.0-M4'
     ext.junitJupiterVersion  = '5.0.0-M4'
 }
+
+allprojects {
+    version = '0.2'
+}
