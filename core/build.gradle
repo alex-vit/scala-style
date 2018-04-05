@@ -1,11 +1,3 @@
-apply plugin: 'java'
-
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     testCompile("org.junit.jupiter:junit-jupiter-api:${rootProject.ext.junitJupiterVersion}")
     testCompile("org.junit.platform:junit-platform-runner:${rootProject.ext.junitPlatformVersion}")
