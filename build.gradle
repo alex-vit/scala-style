@@ -39,6 +39,8 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'maven'
 
+    group = 'com.github.YourUsername'
+
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
