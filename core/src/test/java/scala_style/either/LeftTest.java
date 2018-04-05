@@ -2,8 +2,7 @@ package scala_style.either;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.expectThrows;
+import static scala_style.ExceptionUtils.expect;
 import static scala_style.util.Either.ERROR_LEFT_OF_NULL;
 import static scala_style.util.Left.Left;
 
@@ -21,8 +20,7 @@ class LeftTest {
 
     @Test
     void leftOfNullThrowsIllegalArgumentException() {
-        IllegalArgumentException exception = expectThrows(IllegalArgumentException.class, () -> Left(null));
-        assertEquals(exception.getMessage(), ERROR_LEFT_OF_NULL);
+        expect(() -> Left(null), IllegalArgumentException.class, ERROR_LEFT_OF_NULL);
     }
 
 }

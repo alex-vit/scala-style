@@ -3,8 +3,7 @@ package scala_style.either;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.expectThrows;
+import static scala_style.ExceptionUtils.expect;
 import static scala_style.util.Either.ERROR_RIGHT_OF_NULL;
 import static scala_style.util.Right.Right;
 
@@ -22,8 +21,7 @@ class RightTest {
 
     @Test
     void rightOfNullThrowsIllegalArgumentException() {
-        IllegalArgumentException exception = expectThrows(IllegalArgumentException.class, () -> Right(null));
-        assertEquals(exception.getMessage(), ERROR_RIGHT_OF_NULL);
+        expect(() -> Right(null), IllegalArgumentException.class, ERROR_RIGHT_OF_NULL);
     }
 
 }

@@ -27,6 +27,6 @@ repositories {
 }
 
 ext {
-    ext.junitPlatformVersion = '1.0.0-M2'
-    ext.junitJupiterVersion  = '5.0.0-M2'
+    ext.junitPlatformVersion = '1.0.0-M4'
+    ext.junitJupiterVersion  = '5.0.0-M4'
 }

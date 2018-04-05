@@ -1,6 +1,5 @@
 package scala_style;
 
-import com.sun.istack.internal.Nullable;
 import scala_style.util.Either;
 import scala_style.util.Left;
 import scala_style.util.Right;
@@ -22,7 +21,7 @@ public abstract class Option<A> implements Iterable<A> {
     public static final String ERROR_EMPTY_ITERATOR_GET = "Option.iterator.next on empty iterator";
 
     @SuppressWarnings({"MethodNameSameAsClassName", "WeakerAccess"})
-    public static <A> Option<A> Option(@Nullable A value) {
+    public static <A> Option<A> Option(A value) {
         return (value == null) ? None() : Some(value);
     }
 
@@ -63,7 +62,6 @@ public abstract class Option<A> implements Iterable<A> {
         return (isEmpty()) ? default_.get() : superType.cast(get());
     }
 
-    @Nullable
     public final A orNull() {
         return (isEmpty()) ? null : get();
     }
