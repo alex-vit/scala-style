@@ -1,11 +1,10 @@
 package scala_style;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static scala_style.None.None;
 import static scala_style.Option.Option;
+import static scala_style.Some.Some;
 
 /**
  * Based on the incredible "The Neophyte's Guide to Scala Part 5: The Option Type" by Daniel Westheide
@@ -79,6 +78,45 @@ public class UserRepositoryExample {
         a flattened Some. If either the use or its gender is undefined, we get a None. */
 
         // TODO implement filtering and add the "Filtering an option" example
+
+        /* For comprehensions
+
+        Now that you know that an Option can be treated as a collection and provides map, flatMap, filter and other
+        methods you know from collections, you will probably already suspect that options can be used in for
+        comprehensions. Often, this is the most readable way of working with options, especially if you have to chain
+        a lot of map, flatMap and filter invocations. If it’s just a single map, that may often be preferrable, as it
+        is a little less verbose.
+
+        If we want to get the gender for a single user, we can apply the following for comprehension: */
+        List<String> genderList = new ArrayList<>();
+        for (User u : UserRepository.findById(1)) {
+            for (String g : u.gender) {
+                genderList.add(g);
+            }
+        }
+        genderList.clear();
+
+        /* If we wanted to retrieve the genders of all users that have specified it, we could iterate all users,
+        and for each of them yield a gender, if it is defined: */
+        for (User u : UserRepository.findAll()) {
+            for (String g : u.gender) {
+                genderList.add(g);
+            }
+        }
+        /* Since we are effectively flat mapping, the result type is List[String], and the resulting list is
+        List("male"), because gender is only defined for the first user. */
+
+
+        /* Chaining options
+
+        A good use case for this is finding a resource, when you have several different locations to search for it and
+        an order of preference. In our example, we prefer the resource to be found in the config dir, so we call orElse
+        on it, passing in an alternative option: */
+        Option<Resource> resourceFromConfigDir = None();
+        Option<Resource> resourceFromClasspath = Some(new Resource("I was found on the classpath"));
+        Option<Resource> resource = resourceFromConfigDir.orElse(Resource.class, () -> resourceFromClasspath);
+        /* This is usually a good fit if you want to chain more than just two options – if you simply want to provide
+        a default value in case a given option is absent, the getOrElse method may be a better idea. */
     }
 
     public static final class UserRepository {
@@ -92,29 +130,37 @@ public class UserRepositoryExample {
         private UserRepository() {
         }
 
-        public static Option<User> findById(int id) {
+        static Option<User> findById(int id) {
             return Option(users.get(id));
         }
 
-        public static Collection<User> findAll() {
+        static Collection<User> findAll() {
             return users.values();
         }
 
     }
 
-    public static final class User {
-        public final int id;
-        public final String firstName;
-        public final String lastName;
-        public final int age;
-        public final Option<String> gender;
+    static final class User {
+        final int id;
+        final String firstName;
+        final String lastName;
+        final int age;
+        final Option<String> gender;
 
-        public User(int id, String firstName, String lastName, int age, Option<String> gender) {
+        User(int id, String firstName, String lastName, int age, Option<String> gender) {
             this.id = id;
             this.firstName = firstName;
             this.lastName = lastName;
             this.age = age;
             this.gender = gender;
+        }
+    }
+
+    static final class Resource {
+        final String content;
+
+        public Resource(String content) {
+            this.content = content;
         }
     }
 }
