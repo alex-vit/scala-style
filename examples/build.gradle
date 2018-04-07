@@ -1,3 +1,13 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 27
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+}
+
 dependencies {
     implementation project(':core')
 }

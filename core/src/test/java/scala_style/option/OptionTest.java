@@ -1,19 +1,27 @@
 package scala_style.option;
 
 import org.junit.jupiter.api.Test;
-import scala_style.None;
-import scala_style.Option;
-import scala_style.Some;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
-import static org.junit.jupiter.api.Assertions.*;
+import scala_style.None;
+import scala_style.Option;
+import scala_style.Some;
+import scala_style.function.Function;
+import scala_style.function.Supplier;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static scala_style.ExceptionUtils.expect;
-import static scala_style.Option.*;
+import static scala_style.Option.ERROR_EMPTY_ITERATOR_GET;
+import static scala_style.Option.ERROR_NOT_SUPERTYPE;
+import static scala_style.Option.Option;
+import static scala_style.Option.empty;
+import static scala_style.Option.unless;
+import static scala_style.Option.when;
 
 class OptionTest {
 

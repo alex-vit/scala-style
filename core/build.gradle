@@ -1,9 +1,20 @@
-dependencies {
-    testCompile("org.junit.jupiter:junit-jupiter-api:${rootProject.ext.junitJupiterVersion}")
-    testCompile("org.junit.platform:junit-platform-runner:${rootProject.ext.junitPlatformVersion}")
-    testRuntime("org.junit.jupiter:junit-jupiter-engine:${rootProject.ext.junitJupiterVersion}")
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 27
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
-test {
-    useJUnitPlatform()
+dependencies {
+    testImplementation "junit:junit:$rootProject.ext.junitVintageVersion"
+    testImplementation "org.junit.vintage:junit-vintage-engine:$rootProject.ext.junitVintageEngineVersion"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$rootProject.ext.junitJupiterVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:$rootProject.ext.junitJupiterVersion"
+
+    // Enable use of the JUnitPlatform Runner within the IDE
+    testImplementation "org.junit.platform:junit-platform-runner:$rootProject.ext.junitPlatformVersion"
 }

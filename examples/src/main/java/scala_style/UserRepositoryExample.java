@@ -1,6 +1,10 @@
 package scala_style;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static scala_style.None.None;
 import static scala_style.Option.Option;
@@ -51,7 +55,7 @@ public class UserRepositoryExample {
 
         If you need to perform some side-effect only if a specific optional value is present, the foreach method comes
         in handy. */
-        UserRepository.findById(2).forEach(u -> System.out.println(u.firstName));
+        UserRepository.findById(2).foreach(u -> System.out.println(u.firstName));
         // The function passed to foreach will be called exactly once, if the Option is a Some, or never, if it is None.
 
         /* Mapping an option
