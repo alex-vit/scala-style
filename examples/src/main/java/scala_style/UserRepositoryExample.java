@@ -55,7 +55,9 @@ public class UserRepositoryExample {
 
         If you need to perform some side-effect only if a specific optional value is present, the foreach method comes
         in handy. */
-        UserRepository.findById(2).foreach(u -> System.out.println(u.firstName));
+        for (User u : UserRepository.findById(2)) {
+            System.out.println(u.firstName);
+        }
         // The function passed to foreach will be called exactly once, if the Option is a Some, or never, if it is None.
 
         /* Mapping an option
