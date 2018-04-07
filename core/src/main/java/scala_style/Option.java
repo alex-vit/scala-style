@@ -7,6 +7,7 @@ import scala_style.util.Right;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static scala_style.None.None;
@@ -82,6 +83,14 @@ public abstract class Option<A> implements Iterable<A> {
 
     public final <B> Option<B> flatMap(Function<A, Option<B>> f) {
         return (isEmpty()) ? None() : f.apply(get());
+    }
+
+    public final Option<A> filter(Predicate<A> p) {
+        return (isEmpty() || p.test(get())) ? this : None();
+    }
+
+    public final Option<A> filterNot(Predicate<A> p) {
+        return (isEmpty() || !p.test(get())) ? this : None();
     }
 
     public final <X> Either<A, X> toLeft(Supplier<X> right) {
