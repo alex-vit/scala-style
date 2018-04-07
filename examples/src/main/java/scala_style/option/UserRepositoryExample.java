@@ -1,10 +1,13 @@
-package scala_style;
+package scala_style.option;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import scala_style.Option;
+import scala_style.Some;
 
 import static scala_style.None.None;
 import static scala_style.Option.Option;
