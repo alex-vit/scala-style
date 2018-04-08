@@ -56,6 +56,10 @@ public abstract class Option<A> implements Iterable<A> {
 
     public abstract A get();
 
+    public final A getOrElse(Supplier<A> default_) {
+        return (isEmpty()) ? default_.get() : get();
+    }
+
     public final <B> B getOrElse(Class<B> superType, Supplier<B> default_) {
         final Class<?> selfType = (isEmpty()) ? superType : get().getClass();
         if (!isSuperType(superType, selfType)) throw new IllegalArgumentException(ERROR_NOT_SUPERTYPE);
@@ -64,6 +68,10 @@ public abstract class Option<A> implements Iterable<A> {
 
     public final A orNull() {
         return (isEmpty()) ? null : get();
+    }
+
+    public final Option<A> orElse(Supplier<Option<A>> a) {
+        return (isEmpty()) ? a.get() : this;
     }
 
     public final <B> Option<B> orElse(Class<B> superType, Supplier<Option<B>> a) {

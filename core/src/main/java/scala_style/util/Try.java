@@ -1,9 +1,8 @@
 package scala_style.util;
 
 import scala_style.Option;
-
-import java.util.function.Function;
-import java.util.function.Supplier;
+import scala_style.function.Function;
+import scala_style.function.Supplier;
 
 import static scala_style.util.Failure.Failure;
 import static scala_style.util.Success.Success;

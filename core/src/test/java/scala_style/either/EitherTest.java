@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static scala_style.ExceptionUtils.expect;
 import static scala_style.util.Either.ERROR_LEFT_DOT_RIGHT;
 import static scala_style.util.Either.ERROR_RIGHT_DOT_LEFT;
@@ -16,7 +17,7 @@ class EitherTest {
     @Test
     @DisplayName("Left.left returns value")
     void leftDotLeftReturnsValue() {
-        assert Left(5).left().equals(5);
+        assertEquals((int) Left(5).left(), 5);
     }
 
     @Test
@@ -26,7 +27,7 @@ class EitherTest {
 
     @Test
     void rightDotRighttReturnsValue() {
-        assert Right(5).right().equals(5);
+        assertEquals((int) Right(5).right(), 5);
     }
 
     @Test

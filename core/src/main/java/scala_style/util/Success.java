@@ -1,9 +1,8 @@
 package scala_style.util;
 
 import scala_style.Option;
-
-import java.util.function.Function;
-import java.util.function.Supplier;
+import scala_style.function.Function;
+import scala_style.function.Supplier;
 
 import static scala_style.Option.ERROR_NOT_SUPERTYPE;
 import static scala_style.Some.Some;
