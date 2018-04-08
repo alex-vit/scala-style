@@ -1,17 +1,22 @@
 package scala_style.try_;
 
 import org.junit.jupiter.api.Test;
+
 import scala_style.None;
+import scala_style.function.Supplier;
 import scala_style.util.Failure;
 import scala_style.util.Left;
 import scala_style.util.Success;
 import scala_style.util.Try;
 
-import java.util.function.Supplier;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static scala_style.ExceptionUtils.expect;
 import static scala_style.util.Failure.Failure;
-import static scala_style.util.Try.*;
+import static scala_style.util.Try.ERROR_FAILURE_DOT_GET;
+import static scala_style.util.Try.ERROR_FAILURE_OF_NULL;
+import static scala_style.util.Try.Try;
 
 class FailureTest {
 
@@ -22,24 +27,22 @@ class FailureTest {
 
     @Test
     void failureOfNullThrowsException() {
-        expect(() -> Failure(null),
-                IllegalArgumentException.class, ERROR_FAILURE_OF_NULL);
+        expect(() -> Failure(null), IllegalArgumentException.class, ERROR_FAILURE_OF_NULL);
     }
 
     @Test
     void isFailure() {
-        assert tryWithNpe.isFailure();
+        assertTrue(tryWithNpe.isFailure());
     }
 
     @Test
     void isNotSuccess() {
-        assert !tryWithNpe.isSuccess();
+        assertFalse(tryWithNpe.isSuccess());
     }
 
     @Test
     void getThrowsException() {
-        expect(tryWithNpe::get,
-                RuntimeException.class, ERROR_FAILURE_DOT_GET,
+        expect(tryWithNpe::get, RuntimeException.class, ERROR_FAILURE_DOT_GET,
                 NullPointerException.class);
     }
 
@@ -47,33 +50,33 @@ class FailureTest {
     void failedReturnsSuccessOfException() {
         Try<Throwable> failed = tryWithNpe.failed();
 
-        assert failed instanceof Success<?>;
-        assert failed.get() instanceof NullPointerException;
+        assertTrue(failed instanceof Success<?>);
+        assertTrue(failed.get() instanceof NullPointerException);
     }
 
     @Test
     void getOrElseReturnsDefault() {
-        assert tryWithNpe.getOrElse(String.class, () -> "").equals("");
+        assertEquals(tryWithNpe.getOrElse(String.class, () -> ""), "");
     }
 
     @Test
     void orElseReturnsDefault() {
-        assert tryWithNpe.orElse(String.class, () -> Try(() -> "")).get().equals("");
+        assertEquals(tryWithNpe.orElse(String.class, () -> Try(() -> "")).get(), "");
     }
 
     @Test
     void mapReturnsFailure() {
-        assert tryWithNpe.map(i -> 5f) instanceof Failure<?>;
+        assertTrue(tryWithNpe.map(i -> 5f) instanceof Failure<?>);
     }
 
     @Test
     void flatMapReturnsFailure() {
-        assert tryWithNpe.flatMap(i -> Try(() -> 5f)) instanceof Failure<?>;
+        assertTrue(tryWithNpe.flatMap(i -> Try(() -> 5f)) instanceof Failure<?>);
     }
 
     @Test
     void foldAppliesFA() {
-        assert tryWithNpe.fold(e -> 7, i -> "").equals(7);
+        assertEquals(tryWithNpe.fold(Throwable::toString, i -> i.toString()), 7);
     }
 
     @Test

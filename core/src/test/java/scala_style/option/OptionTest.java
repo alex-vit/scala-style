@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 import scala_style.None;
 import scala_style.Option;
@@ -14,6 +13,9 @@ import scala_style.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static scala_style.ExceptionUtils.expect;
 import static scala_style.Option.ERROR_EMPTY_ITERATOR_GET;
@@ -29,8 +31,8 @@ class OptionTest {
     void noneEqualsNone() {
         Option<Integer> noInteger = empty();
         Option<String> noString = empty();
-        //noinspection EqualsBetweenInconvertibleTypes
-        assert noInteger.equals(noString);
+        //noinspection AssertEqualsBetweenInconvertibleTypes
+        assertEquals(noInteger, noString);
     }
 
     @Test
@@ -38,12 +40,14 @@ class OptionTest {
         Number number = 5;
         Integer integer = 5;
 
-        assert number.equals(integer) && integer.equals(number);
+        assertEquals(number, integer);
+        assertEquals(integer, number);
 
         Option<Number> numberOption = Option(number);
         Option<Integer> integerOption = Option(integer);
 
-        assert numberOption.equals(integerOption) && integerOption.equals(numberOption);
+        assertEquals(numberOption, integerOption);
+        assertEquals(integerOption, numberOption);
     }
 
     @Test
@@ -51,7 +55,8 @@ class OptionTest {
         Option<Integer> option5 = Option(5);
         Option<Integer> option7 = Option(7);
 
-        assert !option5.equals(option7) && !option7.equals(option5);
+        assertNotEquals(option5, option7);
+        assertNotEquals(option7, option5);
     }
 
     @Test
@@ -59,8 +64,8 @@ class OptionTest {
         Option<Integer> integerOption = Option(5);
         Option<String> stringOption = Option("");
 
-        //noinspection EqualsBetweenInconvertibleTypes
-        assert !integerOption.equals(stringOption) && !stringOption.equals(integerOption);
+        assertNotEquals(integerOption, stringOption);
+        assertNotEquals(stringOption, integerOption);
     }
 
     @Test
@@ -68,44 +73,58 @@ class OptionTest {
         Option<Integer> integerOption = Option(5);
         Option<Integer> noIntegerOption = empty();
 
-        assert !integerOption.equals(noIntegerOption) && !noIntegerOption.equals(integerOption);
+        assertNotEquals(integerOption, noIntegerOption);
+        assertNotEquals(noIntegerOption, integerOption);
     }
 
     @Test
     void optionOfNullIsNone() {
         Option<Integer> option = Option(null);
-        assert option instanceof None<?>;
+        assertTrue(option instanceof None<?>);
     }
 
     @Test
     void optionOfValueIsSome() {
         Option<Integer> option = Option(5);
-        assert option instanceof Some<?>;
+        assertTrue(option instanceof Some<?>);
     }
 
     @Test
     void emptyReturnsNone() {
-        assert empty() instanceof None<?>;
+        assertTrue(empty() instanceof None<?>);
     }
 
     @Test
     void whenReturnsNoneOnFalse() {
-        assert when(false, () -> 5) instanceof None<?>;
+        assertTrue(when(false, () -> 5) instanceof None<?>);
     }
 
     @Test
     void whenReturnsSomeOnTrue() {
-        assert when(true, () -> 5) instanceof Some<?>;
+        assertTrue(when(true, () -> 5) instanceof Some<?>);
     }
 
     @Test
     void unlessReturnsNoneOnTrue() {
-        assert unless(true, () -> 5) instanceof None<?>;
+        assertTrue(unless(true, () -> 5) instanceof None<?>);
     }
 
     @Test
     void unlessReturnsSomeOnFalse() {
-        assert unless(false, () -> 5) instanceof Some<?>;
+        assertTrue(unless(false, () -> 5) instanceof Some<?>);
+    }
+
+    @Test
+    void simpleGetOrElseReturnsValueWhenSome() {
+        Option<Integer> option = Option(5);
+        assertEquals(option.get(), option.getOrElse(() -> 7));
+    }
+
+    @Test
+    void simpleGetOrElseReturnsDefaultWhenNone() {
+        Option<Integer> option = empty();
+        Supplier<Integer> default_ = () -> 5;
+        assertEquals(default_.get(), option.getOrElse(default_));
     }
 
     @Test
@@ -131,8 +150,8 @@ class OptionTest {
         Option<Integer> option = Option(value);
         Number orElse = option.getOrElse(Number.class, () -> 7);
         //noinspection ConstantConditions
-        assert orElse instanceof Number;
-        assert orElse.equals(value);
+        assertTrue(orElse instanceof Number);
+        assertEquals(orElse, value);
     }
 
     @Test
@@ -140,17 +159,30 @@ class OptionTest {
         Option<Integer> option = empty();
         Supplier<Integer> default_ = () -> 5;
         Integer orElse = option.getOrElse(Integer.class, default_);
-        assert orElse.equals(default_.get());
+        assertEquals(orElse, default_.get());
     }
 
     @Test
     void orNullReturnsValueWhenSome() {
-        assert Objects.equals(Option(5).orNull(), 5);
+        //noinspection ConstantConditions
+        assertEquals((int) Option(5).orNull(), 5);
     }
 
     @Test
     void orNullReturnsNullWhenNone() {
-        assert empty().orNull() == null;
+        assertNull(empty().orNull());
+    }
+
+    @Test
+    void simpleOrElseReturnsThisWhenSome() {
+        Option<Integer> option = Option(5);
+        assertSame(option, option.orElse(() -> Option(7)));
+    }
+
+    @Test
+    void simpleOrElseReturnsDefaultWhenNone() {
+        Option<Integer> option = empty();
+        assertNotEquals(option, option.orElse(() -> Option(7)));
     }
 
     @Test
@@ -169,7 +201,7 @@ class OptionTest {
         Supplier<Option<Integer>> default_ = () -> Option(7);
         Option<Integer> newOption = option.orElse(Integer.class, default_);
 
-        assert newOption.equals(option);
+        assertEquals(newOption, option);
     }
 
     @Test
@@ -177,46 +209,50 @@ class OptionTest {
         Option<Integer> none = empty();
         Supplier<Option<Integer>> default_ = () -> Option(7);
 
-        assert none.orElse(Integer.class, default_).equals(default_.get());
+        assertEquals(none.orElse(Integer.class, default_), default_.get());
     }
 
     @Test
     void mapReturnsNoneWhenEmpty() {
-        assert empty().map(o -> 5).isEmpty();
+        assertTrue(empty().map(o -> 5).isEmpty());
     }
 
     @Test
     void mapReturnsCorrectValueWhenNotEmpty() {
         Function<Integer, Integer> f = i -> i * 2;
         int value = 5;
-        int expected = f.apply(value);
+        Integer expected = f.apply(value);
 
-        assert Option(value).map(f).get().equals(expected);
+        assertEquals(Option(value).map(f).get(), expected);
     }
 
     @Test
     void foldReturnsIfEmptyIfEmpty() {
-        assert empty().fold(() -> 5, o -> o).equals(5);
+        Option<Integer> option = empty();
+        Integer fold = option.fold(() -> 5, o -> o);
+        assertEquals((int) fold, 5);
     }
 
     @Test
     void foldAppliesFunctionIfNotEmpty() {
         Function<Integer, Integer> f = i -> i * 2;
-        int value = 5;
-        int expected = f.apply(value);
+        Supplier<Integer> s = () -> 7;
+        Integer value = 5;
+        Integer expected = f.apply(value);
+        Integer fold = Option(value).fold(s, f);
 
-        assert Option(value).fold(() -> 7, f).equals(expected);
+        assertEquals(fold, expected);
     }
 
     @Test
     void flatMapReturnsNoneWhenEmpty() {
-        assert Option.<Integer>empty().flatMap(Option::Option).isEmpty();
+        assertTrue(Option.<Integer>empty().flatMap(Option::Option).isEmpty());
     }
 
     @Test
     void flatMapAppliesFunctionWhenNotEmpty() {
         Option<Integer> five = Option(5);
-        assert five.flatMap(Option::Option).equals(five);
+        assertEquals(five.flatMap(Option::Option), five);
     }
 
     @Test
