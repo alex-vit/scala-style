@@ -1,3 +1,2 @@
-include ':compatibilitytestapp'
 include 'core'
 include 'examples'
