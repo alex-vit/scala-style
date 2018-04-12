@@ -1,13 +1,14 @@
 package scala_style;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
+import scala_style.function.Consumer;
 import scala_style.function.Function;
 import scala_style.function.Supplier;
 import scala_style.util.Either;
 import scala_style.util.Left;
 import scala_style.util.Right;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import static scala_style.None.None;
 import static scala_style.Some.Some;
@@ -90,6 +91,10 @@ public abstract class Option<A> implements Iterable<A> {
 
     public final <B> Option<B> flatMap(Function<A, Option<B>> f) {
         return (isEmpty()) ? None() : f.apply(get());
+    }
+
+    public final void forEach(Consumer<A> f) {
+        if (isDefined()) f.accept(get());
     }
 
     public final <X> Either<A, X> toLeft(Supplier<X> right) {
