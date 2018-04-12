@@ -1,7 +1,6 @@
 package scala_style.try_;
 
 import org.junit.jupiter.api.Test;
-
 import scala_style.None;
 import scala_style.function.Supplier;
 import scala_style.util.Failure;
@@ -9,14 +8,10 @@ import scala_style.util.Left;
 import scala_style.util.Success;
 import scala_style.util.Try;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static scala_style.ExceptionUtils.expect;
 import static scala_style.util.Failure.Failure;
-import static scala_style.util.Try.ERROR_FAILURE_DOT_GET;
-import static scala_style.util.Try.ERROR_FAILURE_OF_NULL;
-import static scala_style.util.Try.Try;
+import static scala_style.util.Try.*;
 
 class FailureTest {
 
@@ -76,7 +71,8 @@ class FailureTest {
 
     @Test
     void foldAppliesFA() {
-        assertEquals(tryWithNpe.fold(Throwable::toString, i -> i.toString()), 7);
+        assertEquals(tryWithNpe.fold(Throwable::toString, i -> i.toString()),
+                "java.lang.NullPointerException: NPE");
     }
 
     @Test

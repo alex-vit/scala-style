@@ -2,9 +2,7 @@ package scala_style.option;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static scala_style.ExceptionUtils.expect;
 import static scala_style.Option.ERROR_SOME_OF_NULL;
 import static scala_style.Some.Some;
@@ -13,7 +11,7 @@ class SomeTest {
 
     @Test
     void isNotEmpty() {
-        assertFalse(!Some(5).isEmpty());
+        assertFalse(Some(5).isEmpty());
     }
 
     @Test
